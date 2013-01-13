@@ -1,0 +1,200 @@
+article {
+	DISPLAY: block
+}
+aside {
+	DISPLAY: block
+}
+details {
+	DISPLAY: block
+}
+figcaption {
+	DISPLAY: block
+}
+figure {
+	DISPLAY: block
+}
+footer {
+	DISPLAY: block
+}
+header {
+	DISPLAY: block
+}
+hgroup {
+	DISPLAY: block
+}
+MENU {
+	DISPLAY: block
+}
+nav {
+	DISPLAY: block
+}
+section {
+	DISPLAY: block
+}
+summary {
+	DISPLAY: block
+}
+ {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BACKGROUND: white; MARGIN: 0px auto; FONT: 1em/1.4em Georgia, serif; WIDTH: 40em; COLOR: #333; TEXT-ALIGN: left
+}
+P {
+	MARGIN: 0px 4em 0.8em 0px
+}
+H1 {
+	MARGIN: 0.6em 0px 0.4em; FONT: 2em/1.2em sans-serif; COLOR: #e74b4a
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 1.2em; MARGIN: 1.4em 0px 0px; LINE-HEIGHT: 1.4em; FONT-FAMILY: sans-serif
+}
+H3 {
+	FONT-WEIGHT: normal; FONT-SIZE: 1.1em; MARGIN: 0.8em 0px 0px; LINE-HEIGHT: 1.4em; FONT-STYLE: italic
+}
+TABLE {
+	MARGIN: 0px 4em 1em 0px
+}
+TABLE.GoJava {
+	WIDTH: 100%
+}
+TABLE.GoJava TH {
+	FONT-FAMILY: sans-serif
+}
+PRE {
+	BORDER-RIGHT: #ccc 1px solid; PADDING-RIGHT: 1em; BORDER-TOP: #ccc 1px solid; PADDING-LEFT: 1em; BACKGROUND: #fff8df; PADDING-BOTTOM: 0.6em; MARGIN: 0.8em 0px 1em; FONT: 1em/1.5em monospace; BORDER-LEFT: #ccc 1px solid; PADDING-TOP: 0.6em; BORDER-BOTTOM: #ccc 1px solid; border-radius: 8px
+}
+TABLE.GoJava {
+	BORDER-RIGHT: #ccc 1px solid; PADDING-RIGHT: 1em; BORDER-TOP: #ccc 1px solid; PADDING-LEFT: 1em; BACKGROUND: #fff8df; PADDING-BOTTOM: 0.6em; MARGIN: 0.8em 0px 1em; FONT: 1em/1.5em monospace; BORDER-LEFT: #ccc 1px solid; PADDING-TOP: 0.6em; BORDER-BOTTOM: #ccc 1px solid; border-radius: 8px
+}
+EM {
+	FONT-WEIGHT: normal; FONT-STYLE: italic
+}
+CODE {
+	LINE-HEIGHT: 100%; FONT-FAMILY: monospace
+}
+BLOCKQUOTE {
+	DISPLAY: block; PADDING-LEFT: 12px; MARGIN: 0px 4em 0.8em 0px; BORDER-LEFT: #ccc 4px solid
+}
+figcaption {
+	FONT-SIZE: 90%; MARGIN: -0.8em 0px 0.8em 18px; FONT-STYLE: italic
+}
+figcaption:unknown {
+	content: "¨C "
+}
+DIV.codecaption {
+	FONT-SIZE: 90%; MARGIN: -0.8em 0px 0.8em 16px
+}
+A {
+	FONT-WEIGHT: bold; COLOR: #31adc0; TEXT-DECORATION: none
+}
+A:hover {
+	BACKGROUND: #e7e7df
+}
+A:visited {
+	COLOR: #8cc0ce
+}
+A:active {
+	COLOR: #ace0ee
+}
+nav UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-WEIGHT: bold; FONT-SIZE: 80%; PADDING-BOTTOM: 0.5em; MARGIN: 0px 0px 1em; COLOR: #999; LINE-HEIGHT: 150%; PADDING-TOP: 0.5em; FONT-FAMILY: sans-serif; LIST-STYLE-TYPE: none
+}
+nav UL LI {
+	DISPLAY: inline; WHITE-SPACE: nowrap
+}
+nav UL LI A:unknown {
+	COLOR: #999; content: " >"
+}
+UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 4em 0.8em 2em; PADDING-TOP: 0px; LIST-STYLE-TYPE: square
+}
+OL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 4em 0.8em 2em; PADDING-TOP: 0px
+}
+DL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 4em 0.8em 0px; PADDING-TOP: 0px
+}
+DT {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0px; FONT-WEIGHT: bold; FLOAT: left; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+LI {
+	MARGIN: 0px 0px 0.5em
+}
+UL.none {
+	FONT-SIZE: 95%; MARGIN: 0.5em 0px 0.8em; FONT-FAMILY: sans-serif; LIST-STYLE-TYPE: none
+}
+UL.none LI {
+	MARGIN: 0px 0px 0.2em
+}
+TABLE.contents {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 1em 0px 1em 2em; PADDING-TOP: 0px
+}
+TABLE.contents TD {
+	VERTICAL-ALIGN: top
+}
+TABLE.contents UL {
+	FONT-SIZE: 90%; MARGIN: 0px; LINE-HEIGHT: 1.4em; FONT-FAMILY: sans-serif; LIST-STYLE-TYPE: none
+}
+TABLE.contents UL LI {
+	MARGIN: 0px 4em 0px 0px
+}
+IMG.me {
+	BORDER-RIGHT: #433 1px solid; BORDER-TOP: #433 1px solid; DISPLAY: block; FLOAT: right; MARGIN-LEFT: 2.4em; BORDER-LEFT: #433 1px solid; BORDER-BOTTOM: #433 1px solid
+}
+.image {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 16px 0px; PADDING-TOP: 0px
+}
+.caption {
+	MARGIN-TOP: -10px; FONT-SIZE: 87.5%; FONT-STYLE: italic
+}
+.author {
+	FONT-SIZE: 95%; FONT-FAMILY: sans-serif
+}
+footer {
+	CLEAR: both; FONT-SIZE: 75%; MARGIN: 2em 0px 1em; COLOR: #aaa; LINE-HEIGHT: 140%; PADDING-TOP: 0.5em; FONT-FAMILY: sans-serif; WHITE-SPACE: nowrap; TEXT-ALIGN: left
+}
+
+@media Print    
+{
+BODY {
+	FONT: 0.9em/1.3em Georgia,serif; COLOR: #000
+}
+H1 {
+	COLOR: #000
+}
+H2 {
+	COLOR: #000
+}
+H3 {
+	COLOR: #000
+}
+PRE {
+	BACKGROUND: white; FONT: 0.9em/1.4em monospace
+}
+A {
+	FONT-WEIGHT: normal; COLOR: #000; TEXT-DECORATION: none
+}
+A:visited {
+	FONT-WEIGHT: normal; COLOR: #000; TEXT-DECORATION: none
+}
+UNKNOWN {
+	FONT-SIZE: 90%; TEXT-DECORATION: none; content: " [" attr(href) "]"
+}
+TABLE.GoJava {
+	BACKGROUND: white; FONT: 0.9em/1.4em monospace; WIDTH: 50em
+}
+nav UL {
+	DISPLAY: none
+}
+TABLE.contents {
+	DISPLAY: none
+}
+OBJECT {
+	DISPLAY: none
+}
+footer {
+	DISPLAY: none
+}
+
+}

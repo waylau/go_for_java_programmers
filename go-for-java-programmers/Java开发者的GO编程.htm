@@ -1,0 +1,636 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0057)http://www.nada.kth.se/~snilsson/go_for_java_programmers/ --><HTML 
+lang=en itemtype="http://schema.org/Article" itemscope=""><HEAD><TITLE>Java开发者的GO编程</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8"><!--[if lt IE 9]>
+<SCRIPT src=""></SCRIPT>
+<![endif]--><LINK href="Java开发者的GO编程.files/style.css" rel=stylesheet>
+<META content="To help Java programmers come up to speed quickly with Go." 
+name=description>
+<META content="Go for Java programmers" itemprop="name">
+<META content="To help Java programmers come up to speed quickly with Go." 
+itemprop="description">
+<META content="MSHTML 6.00.2900.6315" name=GENERATOR></HEAD>
+<BODY>
+<H1>面向Java开发者的GO编程</H1>
+<P>英文原文在此<A 
+href="http://www.nada.kth.se/~snilsson/go_for_java_programmers">www.nada.kth.se/~snilsson/go_for_java_programmers</A> 
+</P>
+<P>译文同步至<A href="http://www.waylau.com/">http://www.waylau.com/</A> </P>
+<P>=======================以下正文========================. </P>
+<TABLE class=contents>
+  <TBODY>
+  <TR>
+    <TD>
+      <UL>
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Hello">Hello 
+        stack (example)</A> 
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Differences">Conceptual 
+        differences</A> 
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Syntax">Syntax</A> 
+
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Constants">Constants</A> 
+
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Structs">Structs</A> 
+
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Pointers">Pointers</A> 
+
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Slices">Slices</A> 
+        </LI></UL></TD>
+    <TD>
+      <UL>
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Making_values">Making 
+        values</A> 
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Methods_and_interfaces">Methods 
+        and interfaces</A> 
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Errors">Errors</A> 
+
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Panic">Panic 
+        and recover</A> 
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Goroutines">Goroutines 
+        and channels</A> 
+        <LI><A 
+        href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Concurrency">Concurrency 
+        (example)</A> </LI></UL></TD></TR></TBODY></TABLE>
+<P>本文旨在帮助JAVA开发者迅速掌握&nbsp;<A href="http://golang.org/">Go语言</A>. </P>
+<P>开始用一个很容易能被所有的Java程序员认出的例子来突出特色，然后对GO的框架给出了详细的的描述，最后用一个例子来说明GO结构中没有与&nbsp;Java直接对应处。 
+</P>
+<H2 id=Hello style="CLEAR: left">Hello stack (一个栈的例子)</H2>
+<P>为了吊起你的胃口，我们用一个麻雀虽小，五脏俱全和符合习惯的例子对应这个<A 
+href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/src/collection/Stack.java">Stack.java</A> 
+程序 </P><PRE>// 包collection实现了生成栈.
+package collection
+
+// 零值栈是一个空栈，准备被使用.
+type Stack struct {
+    data []interface{}
+}
+
+// Push函数将x添加到栈顶.
+func (s *Stack) Push(x interface{}) {
+    s.data = append(s.data, x)
+}
+
+// Pop函数是将栈顶元素移除并返回.
+// 在Pop函数执行在空栈时，会被一个运行时的error警示.
+func (s *Stack) Pop() interface{} {
+    i := len(s.data) - 1
+    res := s.data[i]
+    s.data[i] = nil  // 避免内存泄露
+    s.data = s.data[:i]
+    return res
+}
+
+// Size函数返回栈中元素的个数
+func (s *Stack) Size() int {
+    return len(s.data)
+}
+</PRE>
+<DIV class=codecaption><A 
+href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/src/collection/stack.go">stack.go</A></DIV>
+<UL>
+  <LI>顶级声明出现之前，直接的评论是文档注释。他们是纯文字。. 
+  <LI>对于声明，你把名字写在类型后面. 
+  <LI><CODE>struct</CODE> 对应Java中的类, 但struct组成不是方法而只能是变量. 
+  <LI>T<CODE>interface{}</CODE>类型对应Java的 <CODE>Object</CODE>. 
+  在GO中它被所有的类型所实现，而不仅仅是引用类型. 
+  <LI>代码段 <CODE>(s&nbsp;*Stack)</CODE> 声明了一个方法，接收者&nbsp;<CODE>s</CODE> 对应Java中的 
+  <CODE>this</CODE>. 
+  <LI>操作符<CODE>:=</CODE>声明并初始化了一个变量. 它的类型可以从初始化表达式中推导出. </LI></UL>
+<P>这里是一个的Hello world程序，演示了如何使用<CODE>collection.Stack</CODE>的抽象数据类型. </P><PRE>package collection_test
+
+import (
+    collection "."
+    "fmt"
+)
+
+func Example() {
+    var s collection.Stack
+    s.Push("world")
+    s.Push("hello, ")
+    for s.Size() &gt; 0 {
+        fmt.Print(s.Pop())
+    }
+    fmt.Println()
+    //输出: hello, world
+}
+</PRE>
+<DIV class=codecaption><A 
+href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/src/collection/example_test.go">example_test.go</A></DIV>
+<H2 id=Differences>概念上的差异</H2>
+<UL>
+  <LI>Go的构造器没有类。Go 用 <A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Structs">structs</A> 
+  和 <A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Methods_and_interfaces">interfaces</A>来替代实例化方法，类的继承机制，动态方法查找.也可用于Java使用泛型接口 
+
+  <LI>Go提供所有类型的指针的值，而不只是对象和数组。对于任何类型 
+  <CODE>T</CODE>，有一个相应的指针类型<CODE>*T</CODE>表示<A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Pointers">指针</A>指向类型 
+  <CODE>T</CODE>的值。 offers pointers to values of all types, not just objects and 
+  arrays. 
+  <LI>Go允许任何类型都有方法而没有装箱的限制 allows methods on any type; no boxing is required. 
+  方法<EM>receiver</EM>,在Java中对应<CODE>this</CODE>可以是直接值或者是指针. 
+  <LI>数组在Go就是值. 当一个数组被当做函数的参数时，这个函数接收到的是数组的拷贝而不是它的指针. 然而在实践中,函数经常使用 <A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Slices">slices</A>作为参数; 
+  slices引用了基础数组. 
+  <LI>该语言提供了字符串，一个字符串行为就像一个字节片，但是是不可改变的。 
+  <LI>该语言中的哈希表被称作maps. 
+  <LI>该语言提供了独立运行的线程<A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Goroutines">goroutines</A> 
+  和他们之间的通信渠道<A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Goroutines">channels</A>. 
+
+  <LI>某些类型(maps, slices, 和 
+  channels)是按引用传递，而不是值。也就是说，传递一个map到函数并而不是拷贝map，如果函数修改了map，将被调用者看到变化。在Java术语来说，可以认为这是一个map的引用. 
+
+  <LI>Go提供了两种访问级别对应Java的public和包的private.如果它的命名是大写字母开头就是最高级别public，反之就是包的private. 
+
+  <LI>作为替换Java中的异常机制, Go采用了类型 <A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Errors">error</A>值来表示事件，如文件结尾,和运行时的<A 
+  href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/#Panic">panics</A>来表示运行时的错误，如数组越界等. 
+
+  <LI>Go不支持隐式类型转换。混合使用不同类型的操作需要显式转换. 
+  <LI>Go不支持函数重载。在同一范围内的函数和方法必须具有唯一的名称. 
+  <LI>Go使用<CODE>nil</CODE>表示无效的指针，类似于Java使用<CODE>null</CODE>. </LI></UL>
+<H2 id=Syntax>句法</H2>
+<H3>声明</H3>
+<P>声明是跟Java是相反的。你在类型后面再写名称，类型声明从左往右更容易读 </P>
+<TABLE class=GoJava>
+  <TBODY>
+  <TR>
+    <TH>Go</TH>
+    <TH>与Java相对应的</TH></TR>
+  <TR>
+    <TD><CODE>var v1 int</CODE></TD>
+    <TD><CODE>int v1;</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v2 *int</CODE></TD>
+    <TD><CODE>Integer v2;</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v3 string</CODE></TD>
+    <TD><CODE>String v3 = "";</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v4 [10]int</CODE></TD>
+    <TD><CODE>int[] v4 = new int[10]; // v4 在Go中是一个值.</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v5 []int</CODE></TD>
+    <TD><CODE>int[] v5;</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v6 *struct { a int }&nbsp;&nbsp;</CODE></TD>
+    <TD><CODE>C v6; // Given: class C { int a; }</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v7 map[string]int</CODE></TD>
+    <TD><CODE>HashMap&lt;String,Integer&gt; v7;</CODE></TD></TR>
+  <TR>
+    <TD><CODE>var v8 func(a int) int</CODE></TD>
+    <TD><CODE>F v8; // Given: interface F { int f(int a); 
+  }</CODE></TD></TR></TBODY></TABLE>
+<P>声明的一般形式是一个关键字后面跟着被声明对象的名字.这个关键字是<CODE>const</CODE>, <CODE>type</CODE>, 
+<CODE>var</CODE>, 或者<CODE>func</CODE>. 您也可以使用一个关键字，后面的括号中跟着一系列声明. </P><PRE>var (
+    n int
+    x float64
+)
+</PRE>
+<P>当声明一个函数，你必须提供每个参数的名称，或者不提供任何参数的名称，你不能提供了一些而忽略了另外一些名字。您可以组合几个相同类型的名称: </P><PRE>func f(i, j, k int, s, t string)
+</PRE>
+<P>一个变量可以在声明时初始化。当这样做时，指定的变量的类型是允许的，但不是必需的。当未指定类型，默认的是初始化表达式的类型. </P><PRE>var v9 = *v2
+</PRE>
+<P>如果一个变量没有立即初始化，必须要制定类型。那样的情况下，它它会被隐式初始化该类型的零值<EM>zero 
+value</EM>(<CODE>0</CODE>, <CODE>nil</CODE>, <CODE>""</CODE>, 等.). 
+&nbsp;Go不存在未初始化的变量. </P>
+<H3>短声明</H3>
+<P>在函数中，一个短的声明句法是&nbsp;<CODE>:=</CODE>&nbsp;表示. </P><PRE>v10 := v1
+</PRE>
+<P>这等效于 </P><PRE>var v10 = v1
+</PRE>
+<H3>函数类型</H3>
+<P>在Go中，函数都是一等公民。Go的函数类型表示一组所有具有相同的参数和返回类型的函数. </P><PRE>type binOp func(int, int) int
+
+var op binOp
+add := func(i, j int) int { return i + j }
+
+op = add
+n = op(100, 200)  // n = 100 + 200
+</PRE>
+<H3>多重分配</H3>
+<P>GO允许多重分配。在右边的表达式会在评估后，再分配到任何的左操作数。 </P><PRE>i, j = j, i  //交换i和j.
+</PRE>
+<P>函数可以具有多个返回值，表示由括号中的列表。返回的值可以存储分配给一个变​​量列表。 </P><PRE>func f() (i int, pj *int) { ... }
+v1, v2 = f()
+</PRE>
+<H3>空白标识符</H3>
+<P>空白标识符提供了一种忽略多值表达式返回值的方式，用下划线字符表示： The blank identifier, represented by the 
+underscore character, provides a way to ignore values returned by a multi-valued 
+expression: </P><PRE>v1, _ = f()  // 忽略f()返回的第二个值.
+</PRE>
+<H3>分号和格式</H3>
+<P>为了消除对分号和格式不必要的担忧，你可能会用<CODE>gofmt</CODE>程序来写GO风格的标准代码，虽然这种风格看起来很古怪，但熟悉了之后最终会像其他语言风格一样变得舒服 
+</P>
+<P>Go的代码在实际中很多出现分号。严格来说，Go所有的声明都用分号结束。但是Go毫无疑问会在每个非空白行的结尾插入一个分号，除非它还没有完. 
+这样做的后果是，在某些情况下，Go不允许断行。举例，你可能会像下面这样写： </P><PRE>func g()
+{            //无效的;“{”应该是在前面那一行。
+}
+</PRE>
+<P>在<CODE>g()</CODE>后面会被插入一个分号，这样就使他像是一个函数声明而不是函数定义了类似的，你不能这样写： </P><PRE>if n == 0 {
+}
+else {       // 无效的; "else {" 应该是在前面那一行。
+}
+</PRE>
+<P>在<CODE>}</CODE> 后和<CODE>else</CODE>前面会插入一个分号,导致句法错误. </P>
+<H3>条件语句</H3>
+<P>Go在条件语句中并不使用括号，像 <CODE>if</CODE>条件语句 , <CODE>for</CODE> 条件语句的表达式, 
+<CODE>switch</CODE> 条件语句的值. 另一方面，它并不需要在 <CODE>if</CODE>或 
+<CODE>for</CODE>条件语句中加花括号 </P><PRE>if a &lt; b { f() }
+if (a &lt; b) { f() }           // 括号是不必要的.
+if (a &lt; b) f()               // 无效的
+for i = 0; i &lt; 10; i++ {}
+for (i = 0; i &lt; 10; i++) {}  // 无效的
+</PRE>
+<P>此外, <CODE>if</CODE>和<CODE>switch</CODE> 接收一个可选的初始化的状态，那么惯用做法是建一个局部变量 </P><PRE>if err := file.Chmod(0664); err != nil {
+    log.Print(err)
+    return err
+}
+</PRE>
+<H3>For 语句</H3>
+<P>Go没有<CODE>while</CODE>和<CODE>do-while</CODE>语句. 
+当<CODE>for</CODE>语句的条件比较单一时，他的作用就像是<CODE>while</CODE>语句. 完全省略条件则产生一个死循环。 </P>
+<P><CODE>for</CODE>语句可能包含<CODE>range</CODE>遍历 strings, arrays, slices, maps, 或 
+channels。除了写成下面这样 </P><PRE>for i := 0; i &lt; len(a); i++ { ... }
+</PRE>
+<P>去遍历<CODE>a</CODE>的元素，也可以写成 </P><PRE>for i, v := range a { ... }
+</PRE>
+<P>这里的<CODE>i</CODE>指索引， <CODE>v</CODE>代表的array, slice, 
+或者string的连续元素。对于字符串，i是一个字节的索引，<CODE>v</CODE>指向<CODE>rune</CODE>类型（<CODE>rune</CODE>类型是<CODE>int32</CODE>)的一个别名）。maps迭代产生键 
+- 值对，而channels只产生一个迭代值。 </P>
+<H3>Break和continue</H3>
+<P>像Java一样，GO许可break和continue指定一个标签，但标签上必须指的<CODE>for</CODE>, 
+<CODE>switch</CODE>, 或者 <CODE>select</CODE> 语句. </P>
+<H3>Switch 语句</H3>
+<P>在 <CODE>switch</CODE> 语句，<CODE>case</CODE> 标签默认情况下不通过，但你可以让他们 
+<CODE>fallthrough</CODE>语句结束的情况下通过了。 </P><PRE>switch n {
+case 0:  // empty case body
+case 1:
+    f()  // f is not called when n == 0.
+}
+</PRE>
+<P>但是一个<CODE>case</CODE>可以包含过个值 </P><PRE>switch n {
+case 0, 1:
+    f()  // f is called if n == 0 || n == 1.
+}
+</PRE>
+<P><CODE>case</CODE>的值可以支持任何类型的相等比较操作符，如字符串或指针。一个丢失表达式的switch语句 等价于表达式为 
+<CODE>true</CODE>。 </P><PRE>switch {
+case n &lt; 0:
+    f1()
+case n == 0:
+    f2()
+default:
+    f3()
+}
+</PRE>
+<H3>++ 和 -- 语句</H3>
+<P><CODE>++</CODE>和<CODE>--</CODE>只能作为后缀操作符，和仅在语句中，而不是在表达式中。例如，你不可以写<CODE>n = 
+i++</CODE>。 </P>
+<H3>defer语句</H3>
+<P><CODE>defer</CODE>语句调用一个函数的执行被推迟到函数返回那一刻。<CODE>defer</CODE>语句执行时，被递延的函数的参数被计算，并保存，以备将来使用 
+</P><PRE>f, err := os.Open("filename")
+defer f.Close()  // f will be closed when this function returns.
+</PRE>
+<H2 id=Constants>Constants（常量）</H2>
+<P>GO中的常数可能是<EM>untyped</EM>的。这适用于无类型的常量表达式的数字文本，和使用<CODE>const</CODE>声明的无类型的常量表达式。当它被用在需要一个带类型的值的背景下，一个无类型的常量的可以被转变成有类型的值。这样常量的使用相对自由，即使Go没有隐式类型转换 
+</P><PRE>var a uint
+f(a + 1)    // The untyped numeric constant 1 becomes typed as uint.
+f(a + 1e3)  // 1e3 is also typed as uint.
+</PRE>
+<P>语言对非类型化的数字常量不限制大小。限制仅适用于使用一个常量时，其中一种类型是必需的。 </P><PRE>const huge = 1 &lt;&lt; 100
+var n int = huge &gt;&gt; 98
+</PRE>
+<P>如果是不存在的变量声明的类型和相应的表达式的计算结果为一个非类型化的数字常数，这个常数是被转换为 <CODE>rune</CODE>, 
+<CODE>int</CODE>, <CODE>float64</CODE>, 或者<CODE>complex128</CODE> 
+类型，取决于该值是否一个字符，整数，浮点，或复杂的常数。 </P><PRE>c := 'ä'      // rune (alias for int32)
+n := 1 + 2    // int
+x := 2.7      // float64
+z := 1 + 2i   // complex128
+</PRE>
+<P>GO 
+不存在枚举类型。相反，你可以使用特殊的名字<CODE>iota</CODE>在单一的<CODE>const</CODE>声明中从而得到一系列累加值。当初始化表达式省略为一个 
+<CODE>const</CODE>，它重用了前面的表达式。 </P><PRE>const (
+    red = iota  // red == 0
+    blue        // blue == 1
+    green       // green == 2
+)
+</PRE>
+<H2 id=Structs>Structs（结构体）</H2>
+<P>结构体对应于Java中的类，但一个结构的成员不能是方法，而是变量。结构体的指针是类似Java的的引用变量。与Java类不同的是，结构也可以被定义为直接值。在这两种情况下使用 
+<CODE>.</CODE>来访问结构体的成员。 </P><PRE>type MyStruct struct {
+    s string
+    n int64
+}
+
+var x MyStruct      // x is initialized to MyStruct{"", 0}.
+var px *MyStruct    // px is initialized to nil.
+px = new(MyStruct)  // px points to the new struct MyStruct{"", 0}.
+
+x.s = "Foo"
+px.s = "Bar"
+</PRE>
+<P>在Go中，方法可以与任何命名的类型关联，而不仅仅是与结构体。详情见<A 
+href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Methods_and_interfaces">方法和接口的讨论</A>。 
+</P>
+<H2 id=Pointers>Pointers（指针）</H2>
+<P>如果你有一个int或struct或者array需要分配对象的内容复制。 
+想达到Java的引用变量的效果，Go使用指针。对于任何类型e&nbsp;<CODE>T</CODE>,有一个相应的指针类型<CODE>*T</CODE>，表示指针类型&nbsp;<CODE>T</CODE>的值 
+</P>
+<P>给指针变量分配存储空间，使用内置函数<CODE>new</CODE>，传入一个类型，并返回一个指针，指向分配的存储空间。分配的空间将被零初始化的类型。例如， 
+<CODE>new(int)</CODE> 分配存储为一个新的int，初始化它的值为e&nbsp;<CODE>0</CODE>，并返回它的地址，类型 
+<CODE>*int</CODE>。 </P>
+<P>Java代码<CODE>T&nbsp;p&nbsp;=&nbsp;new&nbsp;T()</CODE>，其中 
+<CODE>T</CODE>是一个两个<CODE>int</CODE>型实例变量<CODE>a</CODE>和<CODE>b</CODE>的类，对应于 </P><PRE>type T struct { a, b int }
+var p *T = new(T)
+</PRE>
+<P>或者习惯性这样干 </P><PRE>p := new(T)
+</PRE>
+<P><CODE>var&nbsp;v&nbsp;T</CODE>代表声明，声明了一个变量包含一个值类型&nbsp;<CODE>T</CODE>，这在Java中是没有的。也可使用复合方式创建并初始化值。 
+</P><PRE>v := T{1, 2}
+</PRE>
+<P>等同于 </P><PRE>var v T
+v.a = 1
+v.b = 2
+</PRE>
+<P>对于类型<CODE>T</CODE>的操作数<CODE>x</CODE>，<EM>地址运算符</EM> 
+<CODE>&amp;x</CODE>提供值类型为<CODE>*T</CODE>的<CODE>x</CODE>的地址， </P>
+<H2 id=Slices>Slices（切片）</H2>
+<P>slice是概念上一个结构包含三个域：一个数组的指针、长度和容量。切片支持<CODE>[]</CODE>操作符来访问底层数组的元素。内置的<CODE>len</CODE>函数返回的切片长度。内置的的<CODE>cap</CODE>函数返回切片的能力。 
+</P>
+<P>给定一个数组，或另一个切片，通过<CODE>a[i:j]</CODE>来创建一个新的切片。这个新创建的切片指向<CODE>a</CODE>，从索引<CODE>i</CODE>开始，并结束索引<CODE>j</CODE>之前。它的长度是<CODE>j&nbsp;-&nbsp;i</CODE>。如果<CODE>i</CODE> 
+被省略，切片从0开始。如果<CODE>j</CODE> 被省略，切片在 <CODE>len(a)</CODE>结束。新切片跟 
+<CODE>a</CODE>一样指向相同的数组。即，改变后组成的新的切片的元素在<CODE>a</CODE>都能见到。新切片的容量就是简单的<CODE>a</CODE>减去<CODE>i</CODE>。数组的容量就是数组的长度。 
+</P><PRE>var s []int
+var a [10]int
+
+s = a[:]  // short for s = a[0:len(a)]
+</PRE>
+<P>如果你创建一个值类型为<CODE>[100]byte</CODE>（100个字节，也许是一个缓冲区的数组），你想不复制它，而将它传递给函数，那么函数的参数声明类型<CODE>[]byte</CODE>，并传入数组的切片。切片也可以用 
+<CODE>make</CODE>的函数创建<A 
+href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Making_values">（如下文所述）</A>。 
+</P>
+<P>切片组合采用内置的<CODE>append</CODE>函数，Java的<CODE>ArrayList</CODE>提供相同的功能。 </P><PRE>s0 := []int{1, 2}
+s1 := append(s0, 3)      // append a single element
+s2 := append(s1, 4, 5)   // append multiple elements
+s3 := append(s2, s0...)  // append a slice
+</PRE>
+<P>切片语法，也可以使用在字符串上。它返回一个新字符串，其值是原始的字符串的子串 </P>
+<H2 id=Making_values>make函数</H2>
+<P>Map and channel values must be allocated using the built-in function 
+<CODE>make</CODE>. For example, calling 
+map和channel值必须使用内置的函数<CODE>make</CODE>。例如，调用 </P><PRE>make(map[string]int)
+</PRE>
+<P><CODE>map[string]int</CODE>返回一个新分配的值类型。相对于<CODE>new</CODE>， <CODE>make</CODE> 
+返回的是实际的对象，而不是一个地址。这是一致的事实，map和channel是引用类型。 </P>
+<P>对于map，make函数将容量作为一个可选的第二个参数的提示。对于channel，有一个可选的第二个参数来设置channel的缓冲能力，默认为0（无缓冲）。 
+</P>
+<P><CODE>make</CODE>函数也可以用来分配一个切片。在这种情况下，它分配内存给基本数组并返回一个引用他的切片。该切片中的元素数是一个必需的参数。第二个可选的参数是切片的容量。 
+</P><PRE>m := make([]int, 10, 20)  // Same as new([20]int)[:10]
+</PRE>
+<H2 id=Methods_and_interfaces>方法和接口</H2>
+<H3>方法</H3>
+<P>方法看起来像一个普通的函数定义，但它有一个<EM>receiver</EM>（接收者）。receiver是类似Java实例方法中的this引用。 </P><PRE>type MyType struct { i int }
+
+func (p *MyType) Get() int {
+    return p.i
+}
+
+var pm = new(MyType)
+var n = pm.Get()
+</PRE>
+<P>这声明了一个方法<CODE>Get</CODE>与<CODE>MyType</CODE>关联的。receiver被命名为<CODE>p</CODE> 
+在函数体内。 </P>
+<P><EM>命名的类型</EM>来定义方法。如果您转换不同类型的值，新的值将有新的类型，而不是那些旧的类型。 </P>
+<P>你可以定义一个内置类型的方法，用新的命名类型声明。新的类型和内置的类型是不同的。 </P><PRE>type MyInt int
+
+func (p MyInt) Get() int {
+    return int(p)  // The conversion is required.
+}
+
+func f(i int) {}
+var v MyInt
+
+v = v * v          // The operators of the underlying type still apply.
+f(int(v))          // int(v) has no defined methods.
+f(v)               // INVALID
+</PRE>
+<H3>接口</H3>
+<P>Go接口类似于Java接口，但可被视为一个实现该接口提供任何类型的在Go接口命名的方法。明确的声明是不必要的。 </P>
+<P>接口像这样: </P><PRE>type MyInterface interface {
+    Get() int
+    Set(i int)
+}
+</PRE>
+<P>自从 <CODE>MyType</CODE> 已经有了<CODE>Get</CODE>&nbsp;方法, 我们可以让 
+<CODE>MyType</CODE>满足接口通过添加 </P><PRE>func (p *MyType) Set(i int) {
+    p.i = i
+}
+</PRE>
+<P>现在任何只要将<CODE>MyInterface</CODE>当做参数就可以接收类型是<CODE>*MyType</CODE>的变量 </P><PRE>func GetAndSet(x MyInterface) {}
+
+func f1() {
+    var p MyType
+    GetAndSet(&amp;p)
+}
+</PRE>
+<P>在Java术语，给<CODE>*MyType</CODE> 定义 <CODE>Set</CODE>和<CODE>Get</CODE> 
+使<CODE>*MyType</CODE>自动实现了<CODE>MyInterface</CODE>接口。这种类型型可满足多个接口。这是一种形式的鸭子类型。 
+</P><FIGURE>
+<BLOCKQUOTE>“当看到一只鸟走起来像鸭子、游泳起来像鸭子、叫起来也像鸭子，那么这只鸟就可以被称为鸭子。” 
+</BLOCKQUOTE><FIGCAPTION>James Whitcomb Riley</FIGCAPTION> </FIGURE>
+<H3>匿名域</H3>
+<P>匿名域可以用于实现很像一个Java子类的东西。 </P><PRE>type MySubType struct {
+    MyType
+    j int
+}
+
+func (p *MySubType) Get() int {
+    p.j++
+    return p.MyType.Get()
+}
+</PRE>
+<P><CODE>MySubType</CODE>有效实现的像是<CODE>MyType</CODE>的子类型. </P><PRE>func f2() {
+    var p MySubType
+    GetAndSet(&amp;p)
+}
+</PRE>
+<P><CODE>Set</CODE>方法是继承自<CODE>MyType</CODE>的，因为关联了匿名域的方法的变为了封闭类型的方法。在这种情况下，因为 
+<CODE>MySubType</CODE>有一个匿名与域 <CODE>MyType</CODE>类型，所以为 
+<CODE>MyType</CODE>e的方法也成为<CODE>MySubType</CODE>的方法。<CODE>Get</CODE>方法被重写，<CODE>Set</CODE>方法被继承。 
+</P>
+<P>这是与Java中的子类不完全相同。当一个匿名域的方法被调用时，它的 
+receiver就是这个匿名域，而不是周围的结构体。换句话说，匿名域上的方法的不会动态调度。当你想要实现相当于Java的动态方法查找，请使用接口。 </P><PRE>func f3() {
+    var v MyInterface
+
+    v = new(MyType)
+    v.Get()  // Call the Get method for *MyType.
+
+    v = new(MySubType)
+    v.Get()  // Call the Get method for *MySubType.
+}
+</PRE>
+<H3>类型断言</H3>
+<P>使用一个类型断言可以使具有一个接口类型的变量转换成具有不同的接口类型。这是在运行时动态执行。与Java不同，并不需要任何声明两个接口之间的关系。 </P><PRE>type Printer interface {
+    Print()
+}
+
+func f4(x MyInterface) {
+    x.(Printer).Print()  // type assertion to Printer
+}
+</PRE>
+<P>转换为<CODE>Printer</CODE> 完全是动态的。只要<CODE>x</CODE>（x中存储的值的实际类型）的 <EM>动态类型</EM> 
+定义了一个<CODE>Print</CODE>方法。 </P>
+<H2 id=Errors>Errors(错误机制)</H2>
+<P>Go的多值的返回可以很容易地沿着正常的返回值返回详细的错误消息。按照惯例，这样的<CODE>error</CODE>类型的消息，就像下面的简单的内置接口 
+</P><PRE>type error interface {
+    Error() string
+}
+</PRE>
+<P>例如，<CODE>os.Open</CODE>函数当它无法打开文件时返回一个非零<CODE>error</CODE>值。 </P><PRE>func Open(name string) (file *File, err error)
+</PRE>
+<P>以下代码使用 <CODE>os.Open</CODE>打开一个文件。如果 <CODE>error</CODE>发生，它调用 
+<CODE>log.Fatal</CODE>打印错误信息并停止。 </P><PRE>f, err := os.Open("filename.ext")
+if err != nil {
+    log.Fatal(err)
+}
+// do something with the open *File f
+</PRE>
+<P><CODE>error</CODE>的接口只需要一个 
+<CODE>Error</CODE>的方法，但具体的<CODE>error</CODE>的实现往往有额外的方法，允许调用者进行检查错误的详细信息 </P>
+<H2 id=Panic>Panic and recover（恐惧和恢复）</H2>
+<P><CODE>panic</CODE>（恐慌）是一个运行时错误，展开goroutine的堆栈，一路运行任何递延的功能，然后停止程序。恐慌与Java异常相似，但只适用于运行时的错误，如一个<CODE>nil</CODE> 
+指针或试图索引数组越界。 Go程序使用内置的<CODE>error</CODE>类型 <A 
+href="file:///C:/Documents%20and%20Settings/Administrator/桌面/home/复件%20Go%20for%20Java%20programmers.htm#Errors">（详见上文）</A>为了表示如文件结束等事件。 
+</P>
+<P>可以使用内置的<CODE>recover</CODE> 
+（恢复），重新获得控制权的恐慌的goroutine和恢复正常运行。呼叫<CODE>recover</CODE>停止展开，并返回传入的参数<CODE>panic</CODE>。因为只有运行的未展开代码，内部含有延迟函数，<CODE>recover</CODE>只在内递延的函数有效。如果的goroutine是没有恐慌，<CODE>recover</CODE>返回<CODE>nil</CODE>。 
+</P>
+<H2 id=Goroutines>Go的线程机制和管道</H2>
+<H3>Goroutines（Go的线程机制）</H3>
+<P>Go允许用<CODE>go</CODE>开启一个新的执行线程--goroutine。它运行在不同的，新创建的的goroutine中。在一个程序中的所有goroutine共享相同的地址空间。 
+</P>
+<P>Goroutines是轻量级的，只占用比堆栈分配多一点的空间。堆栈开始小和成长的分配和释放堆（heap）的要求。内部goroutines像进行了复用多个操作系统线程的协程。您不必担心这些细节。 
+</P><PRE>go list.Sort()  // Run list.Sort in parallel; don’t wait for it. 
+</PRE>
+<P>Go处理文字的函数，可以作为<EM>结束</EM>，在处理<CODE>go</CODE>时很强大 </P><PRE>func Publish(text string, delay time.Duration) {
+    go func() {
+        time.Sleep(delay)
+        fmt.Println(text)
+    }()  // Note the parentheses. We must call the function.
+}
+</PRE>
+<P>变量<CODE>text</CODE>和<CODE>delay</CODE>在周围函数和函数文字之间共享;只要它们都可以访问，它们就存在。 </P>
+<H3>Channels（管道）</H3>
+<P>管道通过指定的元素类型的值来提供两个goroutine同步执行和沟通的机制。 <CODE>&lt;-</CODE> 
+操作符指定通道的方向，发送或接收。如无任何指示方向时，通道是双向的。 </P><PRE>chan T          // can be used to send and receive values of type T
+chan&lt;- float64  // can only be used to send float64s
+&lt;-chan int      // can only be used to receive ints
+</PRE>
+<P>管道是一个引用类型，用make分配。 </P><PRE>ic := make(chan int)        // unbuffered channel of ints
+wc := make(chan *Work, 10)  // buffered channel of pointers to Work
+</PRE>
+<P>使用<CODE>&lt;-</CODE> 作为一个二元操作符来在管道上发送值。当在管道上接收一个值时，把它作为一元运算符。 </P><PRE>ic &lt;- 3       // Send 3 on the channel.
+work := &lt;-wc  // Receive a pointer to Work from the channel.
+</PRE>
+<P>如果管道是无缓冲，那么发送者阻塞，直到接收器接收到值。如果管道有一个缓冲区，发送者阻塞，直到该值已被复制到缓冲区。如果缓冲区已满，这意味着等待，直到一些接收器中检索到值。接收器被阻塞，直到有数据接收。 
+</P>
+<H2 id=Concurrency>并发 (示例)</H2>
+<P>最后我们用一个例子来说明如何散落的内容拼起来。这是一个服务器通过管道来接受的<CODE>Work</CODE>请求的例子。每个请求都在一个单独的goroutine运行。 
+<CODE>Work</CODE> 结构本身包含了一个管道，用于返回一个结果。 </P><PRE>package server
+
+import "log"
+
+// New creates a new server that accepts Work requests
+// through the req channel.
+func New() (req chan&lt;- *Work) {
+    wc := make(chan *Work)
+    go serve(wc)
+    return wc
+}
+
+type Work struct {
+    Op    func(int, int) int
+    A, B  int
+    Reply chan int  // Server sends result on this channel.
+}
+
+func serve(wc &lt;-chan *Work) {
+    for w := range wc {
+        go safelyDo(w)
+    }
+}
+
+func safelyDo(w *Work) {
+    // Regain control of panicking goroutine to avoid
+    // killing the other executing goroutines.
+    defer func() {
+        if err := recover(); err != nil {
+            log.Println("work failed:", err)
+        }
+    }()
+    do(w)
+}
+
+func do(w *Work) {
+    w.Reply &lt;- w.Op(w.A, w.B)
+}
+</PRE>
+<DIV class=codecaption><A 
+href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/src/server/server.go">server.go</A></DIV>
+<P>下面展示如何使用： </P><PRE>package server_test
+
+import (
+    server "."
+    "fmt"
+)
+
+func main() {
+    s := server.New()
+
+    divideByZero := &amp;server.Work{
+        Op:    func(a, b int) int { return a / b },
+        A:     100,
+        B:     0,
+        Reply: make(chan int),
+    }
+    s &lt;- divideByZero
+
+    add := &amp;server.Work{
+        Op:    func(a, b int) int { return a + b },
+        A:     100,
+        B:     200,
+        Reply: make(chan int),
+    }
+    s &lt;- add
+
+    fmt.Println(&lt;-add.Reply)
+    // Output: 300
+}
+</PRE>
+<DIV class=codecaption><A 
+href="http://www.nada.kth.se/~snilsson/go_for_java_programmers/src/server/example_test.go">example_test.go</A></DIV>
+<P>并发编程是一个大主题，Java和Go的方法是完全不同的。要想充分体验到并发编程的乐趣，看这篇<A 
+href="http://golang.org/doc/codewalk/sharemem/">Share Memory by 
+Communicating（《通过沟通共享内存》）</A> </P>
+<P class=author><A 
+href="https://plus.google.com/100350950314702566738/about?rel=author">Stefan 
+Nilsson</A></P><FOOTER>该文基于相似的文章 <A 
+href="http://code.google.com/p/go-wiki/wiki/GoForCPPProgrammers">《面向C++的GO编程》</A> 
+<BR><TIME datetime="2013-1-13">2013-1-13</TIME> </FOOTER></BODY></HTML>
